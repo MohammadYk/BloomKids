@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloomPay - My Piggy Bank Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', 'Bubblegum Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2d3436;
+        }
+
+        .dashboard-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: #ffffff;
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border: 3px dashed #4ecdc4;
+        }
+
+        header h1 {
+            color: #ff6b6b;
+            font-size: 2rem;
+            text-shadow: 1px 1px 0px #ffe66d;
+        }
+
+        .user-welcome {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #0984e3;
+        }
+
+        .btn-logout {
+            background-color: #ff7675;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #d63031;
+            margin-left: 10px;
+        }
+
+        .btn-logout:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #d63031;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 30px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            border: 4px solid #f39c12;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .balance-card:hover {
+            transform: scale(1.01);
+        }
+
+        .balance-card h2 {
+            font-size: 1.3rem;
+            color: #d35400;
+            margin-bottom: 10px;
+        }
+
+        .balance-amount {
+            font-size: 3.5rem;
+            color: #2d3436;
+            font-weight: bold;
+            text-shadow: 2px 2px 0px rgba(255,255,255,0.5);
+        }
+
+        .balance-card small {
+            display: block;
+            margin-top: 5px;
+            color: #d35400;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .grid-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border: 3px solid #dfe6e9;
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            color: #0984e3;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #0984e3;
+        }
+
+        .btn-action {
+            background-color: #00b894;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #00cec9;
+            transition: all 0.1s ease;
+        }
+
+        .btn-action:hover {
+            background-color: #55efc4;
+            color: #2d3436;
+        }
+
+        .btn-action:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #00cec9;
+        }
+
+        .btn-deposit {
+            background-color: #0984e3;
+            box-shadow: 0 4px 0 #74b9ff;
+        }
+
+        .btn-deposit:hover {
+            background-color: #74b9ff;
+        }
+
+        .btn-deposit:active {
+            box-shadow: 0 1px 0 #74b9ff;
+        }
+
+        .transactions-list {
+            list-style: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .transactions-list li {
+            padding: 10px;
+            border-bottom: 2px dashed #dfe6e9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .tx-positive {
+            color: #00b894;
+            font-weight: bold;
+        }
+
+        .tx-negative {
+            color: #d63031;
+            font-weight: bold;
+        }
+
+        .analytics-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border: 3px solid #dfe6e9;
+            text-align: center;
+        }
+
+        .alert-msg {
+            font-size: 0.85rem;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            background-color: rgba(0,0,0,0.5); 
+            justify-content: center; 
+            align-items: center;
+            padding: 10px;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+            border: 4px solid #f39c12;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h3 {
+            color: #d35400;
+            margin-bottom: 12px;
+        }
+
+        .currency-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #dfe6e9;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .debt-list {
+            list-style: none;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .debt-list li {
+            padding: 8px;
+            border-bottom: 1px dashed #dfe6e9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .debt-actions button {
+            background: #ff7675;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 4px;
+            font-size: 0.8rem;
+        }
+
+        .debt-actions button.btn-edit {
+            background: #fdcb6e;
+            color: #2d3436;
+        }
+
+        .close-modal {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header>
+            <h1>🐷 BloomPay</h1>
+            <div>
+                <span class="user-welcome" id="display-username">Hi, Saver!</span>
+                <button class="btn-logout" onclick="logout()">Log Out</button>
+            </div>
+        </header>
+
+        <div class="balance-card" onclick="openCurrencyModal()" title="Click to view currencies and debts!">
+            <h2>My Piggy Bank Balance</h2>
+            <div class="balance-amount" id="display-balance">0.00 USD</div>
+            <small>🌐 Click here for Currencies & People Owing You!</small>
+        </div>
+
+        <div class="grid-section">
+            <div class="card">
+                <h3>💰 Add Money</h3>
+                <div id="deposit-alert" class="alert-msg" style="display:none;"></div>
+                <form id="deposit-form">
+                    <div class="form-group">
+                        <label for="deposit-amount">Amount to Add:</label>
+                        <input type="number" id="deposit-amount" min="1" step="any" placeholder="e.g. 20" required>
+                    </div>
+                    <button type="submit" class="btn-action btn-deposit">Deposit to Piggy Bank! 🌟</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>💸 Send Money</h3>
+                <div id="transfer-alert" class="alert-msg" style="display:none;"></div>
+                <form id="transfer-form">
+                    <div class="form-group">
+                        <label for="recipient">Friend's Username:</label>
+                        <input type="text" id="recipient" placeholder="e.g. StarSaver99" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transfer-amount">Amount:</label>
+                        <input type="number" id="transfer-amount" min="1" step="any" placeholder="e.g. 10" required>
+                    </div>
+                    <button type="submit" class="btn-action">Transfer Now! 🚀</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="grid-section" style="grid-template-columns: 1fr;">
+            <div class="card">
+                <h3>📜 Recent Activity</h3>
+                <ul class="transactions-list" id="transactions-list">
+                    <li><span>No transactions yet</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="analytics-card">
+            <h3>📊 Savings Analytics (Last 30 Days)</h3>
+            <div style="position: relative; height:250px; width:100%;">
+                <canvas id="analyticsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="currencyModal" class="modal">
+        <div class="modal-content">
+            <h3>💱 Currency & Debt Hub</h3>
+            <p style="margin-bottom: 12px; font-size: 0.85rem; color: #636e72;">Converted balances across currencies:</p>
+            <div class="currency-row"><span>US Dollar ($):</span> <span id="conv-usd">0.00</span></div>
+            <div class="currency-row"><span>Nigerian Naira (₦):</span> <span id="conv-ngn">0.00</span></div>
+            <div class="currency-row"><span>Euro (€):</span> <span id="conv-eur">0.00</span></div>
+            <div class="currency-row"><span>British Pound (£):</span> <span id="conv-gbp">0.00</span></div>
+            <div class="currency-row"><span>Canadian Dollar (CAD):</span> <span id="conv-cad">0.00</span></div>
+
+            <hr style="margin: 20px 0; border: 1px dashed #dfe6e9;">
+
+            <h3 style="font-size: 1.1rem; color: #0984e3;">🤝 People Owing Me</h3>
+            <div id="debt-alert" class="alert-msg" style="display:none;"></div>
+            <form id="debt-form" style="margin-top: 10px;">
+                <div class="form-group">
+                    <label for="debtor-name">Debtor's Name:</label>
+                    <input type="text" id="debtor-name" placeholder="e.g. John" required>
+                </div>
+                <div class="form-group">
+                    <label for="debt-amount">Amount Owed:</label>
+                    <input type="number" id="debt-amount" min="1" step="any" placeholder="e.g. 15" required>
+                </div>
+                <button type="submit" class="btn-action" style="padding: 8px; font-size: 0.95rem;">Add Owing Record 📌</button>
+            </form>
+
+            <div style="margin-top: 15px; text-align: left;">
+                <h4 style="font-size: 0.9rem; color: #636e72; margin-bottom: 5px;">Active Debts:</h4>
+                <ul class="debt-list" id="debt-list">
+                    <li><span>No one owes you money</span></li>
+                </ul>
+            </div>
+
+            <button class="close-modal" onclick="closeCurrencyModal()">Close Hub 👍</button>
+        </div>
+    </div>
+
+    <script>
+        const activeUsername = localStorage.getItem('novaKidsActiveUser');
+        if (!activeUsername) {
+            alert("⚠️ Please log in or sign up first!");
+            window.location.href = "LogIn/index.html";
+        }
+
+        let users = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
+        let currentUserIndex = users.findIndex(u => u.username === activeUsername);
+        
+        if (currentUserIndex === -1) {
+            alert("⚠️ Account not found. Please register again.");
+            localStorage.removeItem('novaKidsActiveUser');
+            window.location.href = "SignUp/index.html";
+        }
+
+        let currentUser = users[currentUserIndex];
+
+        if (typeof currentUser.balance !== 'number') currentUser.balance = 0;
+        if (!currentUser.transactions) currentUser.transactions = [];
+        if (!currentUser.debts) currentUser.debts = [];
+
+        document.getElementById('display-username').textContent = `Hi, ${currentUser.username}!`;
+        let currencySymbol = getCurrencySymbol(currentUser.currency || 'USD');
+        document.getElementById('display-balance').textContent = `${currentUser.balance.toFixed(2)} ${currentUser.currency || 'USD'}`;
+
+        renderTransactions();
+        renderDebts();
+        let analyticsChartInstance = null;
+        renderAnalyticsChart();
+
+        function openCurrencyModal() {
+            let usdVal = currentUser.balance;
+            if (currentUser.currency === 'NGN') usdVal = currentUser.balance / 1500;
+            if (currentUser.currency === 'EUR') usdVal = currentUser.balance / 0.92;
+            if (currentUser.currency === 'GBP') usdVal = currentUser.balance / 0.78;
+            if (currentUser.currency === 'CAD') usdVal = currentUser.balance / 1.35;
+
+            document.getElementById('conv-usd').textContent = `$${usdVal.toFixed(2)}`;
+            document.getElementById('conv-ngn').textContent = `₦${(usdVal * 1500).toFixed(2)}`;
+            document.getElementById('conv-eur').textContent = `€${(usdVal * 0.92).toFixed(2)}`;
+            document.getElementById('conv-gbp').textContent = `£${(usdVal * 0.78).toFixed(2)}`;
+            document.getElementById('conv-cad').textContent = `CAD ${(usdVal * 1.35).toFixed(2)}`;
+
+            document.getElementById('currencyModal').style.display = 'flex';
+        }
+
+        function closeCurrencyModal() {
+            document.getElementById('currencyModal').style.display = 'none';
+        }
+
+        document.getElementById('deposit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('deposit-amount').value);
+            const alertBox = document.getElementById('deposit-alert');
+            alertBox.style.display = 'none';
+
+            if (isNaN(amount) || amount <= 0) {
+                showAlert(alertBox, "Please enter a valid amount to deposit.", "red");
+                return;
+            }
+
+            currentUser.balance += amount;
+            const todayStr = new Date().toISOString().split('T')[0];
+            currentUser.transactions.unshift({ type: 'deposit', amount: amount, date: todayStr });
+
+            saveUserData();
+            document.getElementById('deposit-form').reset();
+            showAlert(alertBox, `🎉 Successfully added ${currencySymbol}${amount.toFixed(2)} to your piggy bank!`, "green");
+        });
+
+        document.getElementById('transfer-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const recipientName = document.getElementById('recipient').value.trim();
+            const amount = parseFloat(document.getElementById('transfer-amount').value);
+            const alertBox = document.getElementById('transfer-alert');
+            alertBox.style.display = 'none';
+
+            if (recipientName.toLowerCase() === currentUser.username.toLowerCase()) {
+                showAlert(alertBox, "You cannot send money to yourself!", "red");
+                return;
+            }
+
+            if (amount > currentUser.balance) {
+                showAlert(alertBox, "Oops! You don't have enough money in your piggy bank.", "red");
+                return;
+            }
+
+            let recipientUserIndex = users.findIndex(u => u.username.toLowerCase() === recipientName.toLowerCase());
+            if (recipientUserIndex === -1) {
+                showAlert(alertBox, "Could not find a user with that username.", "red");
+                return;
+            }
+
+            let recipientUser = users[recipientUserIndex];
+
+            currentUser.balance -= amount;
+            recipientUser.balance += amount;
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            currentUser.transactions.unshift({ type: 'transfer-out', amount: amount, to: recipientUser.username, date: todayStr });
+            if (!recipientUser.transactions) recipientUser.transactions = [];
+            recipientUser.transactions.unshift({ type: 'transfer-in', amount: amount, from: currentUser.username, date: todayStr });
+
+            users[currentUserIndex] = currentUser;
+            users[recipientUserIndex] = recipientUser;
+            localStorage.setItem('novaKidsUsers', JSON.stringify(users));
+
+            refreshUI();
+            document.getElementById('transfer-form').reset();
+            showAlert(alertBox, "🎉 Transfer successful!", "green");
+        });
+
+        document.getElementById('debt-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('debtor-name').value.trim();
+            const amount = parseFloat(document.getElementById('debt-amount').value);
+            const alertBox = document.getElementById('debt-alert');
+            alertBox.style.display = 'none';
+
+            currentUser.debts.push({ id: Date.now(), name: name, amount: amount });
+            saveUserData();
+
+            document.getElementById('debt-form').reset();
+            showAlert(alertBox, `📌 Added ${name} to your owing list!`, "green");
+        });
+
+        function deleteDebt(id) {
+            const index = currentUser.debts.findIndex(d => d.id === id);
+            if (index !== -1) {
+                const settledDebt = currentUser.debts[index];
+                currentUser.balance += settledDebt.amount;
+                const todayStr = new Date().toISOString().split('T')[0];
+                currentUser.transactions.unshift({ type: 'deposit', amount: settledDebt.amount, date: todayStr, note: `Paid back by ${settledDebt.name}` });
+
+                currentUser.debts.splice(index, 1);
+                saveUserData();
+                alert(`🎉 ${settledDebt.name} paid you back ${currencySymbol}${settledDebt.amount.toFixed(2)}! Added to your piggy bank.`);
+            }
+        }
+
+        function editDebt(id) {
+            const debt = currentUser.debts.find(d => d.id === id);
+            if (!debt) return;
+
+            const newAmountStr = prompt(`Update the amount ${debt.name} owes you:`, debt.amount);
+            if (newAmountStr !== null) {
+                const newAmount = parseFloat(newAmountStr);
+                if (!isNaN(newAmount) && newAmount > 0) {
+                    debt.amount = newAmount;
+                    saveUserData();
+                } else {
+                    alert("Please enter a valid amount.");
+                }
+            }
+        }
+
+        function saveUserData() {
+            users[currentUserIndex] = currentUser;
+            localStorage.setItem('novaKidsUsers', JSON.stringify(users));
+            refreshUI();
+        }
+
+        function refreshUI() {
+            currencySymbol = getCurrencySymbol(currentUser.currency || 'USD');
+            document.getElementById('display-balance').textContent = `${currentUser.balance.toFixed(2)} ${currentUser.currency || 'USD'}`;
+            renderTransactions();
+            renderDebts();
+            renderAnalyticsChart();
+        }
+
+        function showAlert(element, message, color) {
+            element.textContent = message;
+            element.style.color = color === 'red' ? '#d63031' : '#00b894';
+            element.style.display = 'block';
+        }
+
+        function renderTransactions() {
+            const listEl = document.getElementById('transactions-list');
+            listEl.innerHTML = '';
+
+            if (!currentUser.transactions || currentUser.transactions.length === 0) {
+                listEl.innerHTML = '<li><span>No transactions yet</span><span style="color:#b2bec3">0.00</span></li>';
+                return;
+            }
+
+            currentUser.transactions.forEach(tx => {
+                const li = document.createElement('li');
+                let desc = '';
+                let amountClass = 'tx-positive';
+                let sign = '+';
+
+                if (tx.type === 'deposit') {
+                    desc = tx.note || `Piggy Bank Deposit`;
+                } else if (tx.type === 'transfer-in') {
+                    desc = `From: @${tx.from}`;
+                } else if (tx.type === 'transfer-out') {
+                    desc = `To: @${tx.to}`;
+                    amountClass = 'tx-negative';
+                    sign = '-';
+                }
+
+                li.innerHTML = `<span>${desc} <br><small style="color:#b2bec3">${tx.date}</small></span>
+                                <span class="${amountClass}">${sign}${currencySymbol}${tx.amount.toFixed(2)}</span>`;
+                listEl.appendChild(li);
+            });
+        }
+
+        function renderDebts() {
+            const listEl = document.getElementById('debt-list');
+            listEl.innerHTML = '';
+
+            if (!currentUser.debts || currentUser.debts.length === 0) {
+                listEl.innerHTML = '<li><span>No one owes you money</span></li>';
+                return;
+            }
+
+            currentUser.debts.forEach(debt => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span><b>${debt.name}</b>: ${currencySymbol}${debt.amount.toFixed(2)}</span>
+                                <span class="debt-actions">
+                                    <button class="btn-edit" onclick="editDebt(${debt.id})">Edit</button>
+                                    <button onclick="deleteDebt(${debt.id})">Paid 💰</button>
+                                </span>`;
+                listEl.appendChild(li);
+            });
+        }
+
+        function renderAnalyticsChart() {
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            
+            const labels = [];
+            const dataPoints = [];
+            let runningBalance = currentUser.balance;
+            
+            for (let i = 29; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                labels.push(d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }));
+                dataPoints.unshift(Math.max(0, runningBalance));
+            }
+
+            if (analyticsChartInstance) {
+                analyticsChartInstance.destroy();
+            }
+
+            analyticsChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Savings Balance History',
+                        data: dataPoints,
+                        borderColor: '#0984e3',
+                        backgroundColor: 'rgba(9, 132, 227, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function getCurrencySymbol(code) {
+            switch(code) {
+                case 'EUR': return '€';
+                case 'GBP': return '£';
+                case 'NGN': return '₦';
+                default: return '$';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('novaKidsActiveUser');
+            window.location.href = "LogIn/index.html";
+        }
+    </script>
+</body>
+</html>
