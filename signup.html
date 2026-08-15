@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join BloomKids! - Your Digital Savings Vault</title>
-    <link rel="shortcut icon" href="../assets/logo.png" type="image/x-icon">
+    <title>BloomKids - Sign Up</title>
     <style>
         * {
             box-sizing: border-box;
@@ -14,14 +13,15 @@
         }
 
         body {
-            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #ffbcd1, #fbc2eb);
+            background: linear-gradient(-45deg, #a1c4fd, #c2e9fb, #e0c3fc, #8ec5fc);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             min-height: 100vh;
+            padding: 20px;
+            color: #2d3436;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
 
         @keyframes gradientBG {
@@ -30,7 +30,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        .signup-container {
+        .auth-container {
             background: #ffffff;
             padding: 40px;
             border-radius: 25px;
@@ -43,7 +43,7 @@
             transition: transform 0.3s ease;
         }
 
-        .signup-container:hover {
+        .auth-container:hover {
             transform: translateY(-5px);
         }
 
@@ -84,8 +84,8 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(10px); }
-            to { opacity: 1; transform: translateX(0); }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-group {
@@ -117,7 +117,7 @@
             box-shadow: 0 0 8px rgba(78, 205, 196, 0.4);
         }
 
-        .btn-signup {
+        .btn-auth {
             background-color: #ffe66d;
             color: #2d3436;
             border: none;
@@ -132,30 +132,15 @@
             margin-top: 10px;
         }
 
-        .btn-signup:hover {
+        .btn-auth:hover {
             background-color: #f1c40f;
             transform: translateY(-2px);
             box-shadow: 0 7px 0 #d4ac0d;
         }
 
-        .btn-signup:active {
+        .btn-auth:active {
             transform: translateY(4px);
             box-shadow: 0 1px 0 #f1c40f;
-        }
-
-        .error-msg {
-            color: #d63031;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            font-weight: bold;
-            display: none;
-            animation: shake 0.4s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-8px); }
-            40%, 80% { transform: translateX(8px); }
         }
 
         .footer-text {
@@ -172,53 +157,66 @@
         }
 
         .footer-text a:hover {
-            color: #4ecdc4;
             text-decoration: underline;
+        }
+
+        .alert-msg {
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #d63031;
+            display: none;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <div class="signup-container">
+    <div class="auth-container">
         <div class="logo-area">
             <h1>🌸 BloomKids</h1>
-            <p id="subtitle-text">Start Your Saving Adventure Today!</p>
+            <p id="signup-subtitle">Start Your Saving Adventure Today!</p>
         </div>
 
-        <div id="error-alert" class="error-msg"></div>
+        <div id="signup-error-alert" class="alert-msg"></div>
 
         <form id="signup-form">
             <div id="step-1-fields" class="form-step">
                 <div class="form-group">
-                    <label for="username">Choose a Username:</label>
-                    <input type="text" id="username" name="username" placeholder="e.g. SamsungGuru" required>
+                    <label for="signup-username">Choose a Username:</label>
+                    <input type="text" id="signup-username" placeholder="e.g. SamsungGuru">
                 </div>
 
                 <div class="form-group">
-                    <label for="parent-email">Parent's Email Address:</label>
-                    <input type="email" id="parent-email" name="parent_email" placeholder="parent@example.com" required>
+                    <label for="signup-parent-email">Parent's Email Address:</label>
+                    <input type="email" id="signup-parent-email" placeholder="parent@example.com">
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Create a Secret Password:</label>
-                    <input type="password" id="password" name="password" placeholder="Shhh... keep it secret!" required>
+                    <label for="signup-password">Create a Secret Password:</label>
+                    <input type="password" id="signup-password" placeholder="Shhh... keep it secret!">
                 </div>
             </div>
 
             <div id="step-2-fields" class="form-step" style="display: none;">
                 <div class="form-group">
-                    <label for="fullname">What is your Full Name?</label>
-                    <input type="text" id="fullname" name="fullname" placeholder="e.g. John Doe">
+                    <label for="signup-fullname">What is your Full Name?</label>
+                    <input type="text" id="signup-fullname" placeholder="e.g. John Doe">
                 </div>
 
                 <div class="form-group">
-                    <label for="age">How old are you?</label>
-                    <input type="number" id="age" name="age" min="3" max="18" placeholder="e.g. 10">
+                    <label for="signup-age">How old are you?</label>
+                    <input type="number" id="signup-age" min="3" max="18" placeholder="e.g. 10">
                 </div>
 
                 <div class="form-group">
-                    <label for="currency">Choose your favorite Currency:</label>
-                    <select id="currency" name="currency">
+                    <label for="signup-currency">Choose your favorite Currency:</label>
+                    <select id="signup-currency">
                         <option value="USD">$ - US Dollar</option>
                         <option value="EUR">€ - Euro</option>
                         <option value="GBP">£ - British Pound</option>
@@ -228,33 +226,35 @@
                 </div>
             </div>
 
-            <button type="submit" id="submit-btn" class="btn-signup">Next Step! 🌟</button>
+            <button type="submit" id="signup-submit-btn" class="btn-auth">Next Step! 🌟</button>
         </form>
 
         <div class="footer-text">
-            Already have a savings account? <a href="../LogIn/index.html">Log in here</a>
+            Already have a savings account? <a href="login.html">Log in here</a>
         </div>
     </div>
 
     <script>
-        const form = document.getElementById('signup-form');
-        const step1Fields = document.getElementById('step-1-fields');
-        const step2Fields = document.getElementById('step-2-fields');
-        const subtitleText = document.getElementById('subtitle-text');
-        const submitBtn = document.getElementById('submit-btn');
-        const errorAlert = document.getElementById('error-alert');
+        let signupStep = 1;
 
-        let currentStep = 1;
-
-        form.addEventListener('submit', function(e) {
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            const errorAlert = document.getElementById('signup-error-alert');
             errorAlert.style.display = 'none';
 
-            if (currentStep === 1) {
-                const usernameInput = document.getElementById('username').value.trim();
-                
-                let registeredUsers = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
-                const userExists = registeredUsers.some(user => user.username.toLowerCase() === usernameInput.toLowerCase());
+            if (signupStep === 1) {
+                const usernameInput = document.getElementById('signup-username').value.trim();
+                const parentEmail = document.getElementById('signup-parent-email').value.trim();
+                const password = document.getElementById('signup-password').value;
+
+                if (!usernameInput || !parentEmail || !password) {
+                    errorAlert.textContent = "⚠️ Please fill out all required fields!";
+                    errorAlert.style.display = 'block';
+                    return;
+                }
+
+                const users = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
+                const userExists = users.some(user => user.username.toLowerCase() === usernameInput.toLowerCase());
 
                 if (userExists) {
                     errorAlert.textContent = "⚠️ That username is already registered! Please pick another one.";
@@ -262,23 +262,23 @@
                     return;
                 }
 
-                step1Fields.style.display = 'none';
-                step2Fields.style.display = 'block';
-                subtitleText.textContent = "Tell us a little bit about yourself!";
-                submitBtn.textContent = "Create My Savings Vault! 🚀";
-                currentStep = 2;
+                document.getElementById('step-1-fields').style.display = 'none';
+                document.getElementById('step-2-fields').style.display = 'block';
+                document.getElementById('signup-subtitle').textContent = "Tell us a little bit about yourself!";
+                document.getElementById('signup-submit-btn').textContent = "Create My Savings Vault! 🚀";
+                signupStep = 2;
 
             } else {
-                const username = document.getElementById('username').value.trim();
-                const parentEmail = document.getElementById('parent-email').value.trim();
-                const password = document.getElementById('password').value;
-                const fullname = document.getElementById('fullname').value.trim();
-                const age = document.getElementById('age').value;
-                const currency = document.getElementById('currency').value;
+                const username = document.getElementById('signup-username').value.trim();
+                const parentEmail = document.getElementById('signup-parent-email').value.trim();
+                const password = document.getElementById('signup-password').value;
+                const fullname = document.getElementById('signup-fullname').value.trim();
+                const age = document.getElementById('signup-age').value;
+                const currency = document.getElementById('signup-currency').value;
 
-                let registeredUsers = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
-                
-                registeredUsers.push({
+                const users = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
+
+                users.push({
                     username: username,
                     parentEmail: parentEmail,
                     password: password,
@@ -290,10 +290,9 @@
                     debts: []
                 });
 
-                localStorage.setItem('novaKidsUsers', JSON.stringify(registeredUsers));
-
+                localStorage.setItem('novaKidsUsers', JSON.stringify(users));
                 alert("🎉 Hooray! Your BloomKids Savings Vault has been created!");
-                window.location.href = "../LogIn/index.html";
+                window.location.href = 'login.html';
             }
         });
     </script>
