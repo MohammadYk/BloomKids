@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In to BloomPay! - Your Digital Savings Vault</title>
+    <link rel="shortcut icon" href="../assets/logo.png" type="image/x-icon">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', 'Bubblegum Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #a1c4fd, #c2e9fb, #e0c3fc, #8ec5fc);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            border: 4px dashed #4ecdc4;
+            animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+
+        @keyframes popUp {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .logo-area h1 {
+            color: #4ecdc4;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0px #ffe66d;
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .logo-area p {
+            color: #ff6b6b;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3436;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 3px solid #dfe6e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-login {
+            background-color: #ffe66d;
+            color: #2d3436;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #f1c40f;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            background-color: #f1c40f;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 #d4ac0d;
+        }
+
+        .btn-login:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #f1c40f;
+        }
+
+        .error-msg {
+            color: #d63031;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            display: none;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #636e72;
+        }
+
+        .footer-text a {
+            color: #4ecdc4;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s ease;
+        }
+
+        .footer-text a:hover {
+            color: #ff6b6b;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo-area">
+            <h1>🌸 BloomPay</h1>
+            <p>Welcome Back, Super Saver!</p>
+        </div>
+
+        <div id="error-alert" class="error-msg"></div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">Your Cool Username:</label>
+                <input type="text" id="username" name="username" placeholder="e.g. SamsungGuru" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Your Secret Password:</label>
+                <input type="password" id="password" name="password" placeholder="Shhh... keep it secret!" required>
+            </div>
+
+            <button type="submit" class="btn-login">Open My Savings Vault! 🚀</button>
+        </form>
+
+        <div class="footer-text">
+            Don't have a savings account yet? <a href="../LogIn/index.html">Login In here</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const usernameInput = document.getElementById('username').value.trim();
+            const passwordInput = document.getElementById('password').value;
+            const errorAlert = document.getElementById('error-alert');
+            errorAlert.style.display = 'none';
+
+            let registeredUsers = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
+            
+            const foundUser = registeredUsers.find(user => 
+                user.username.toLowerCase() === usernameInput.toLowerCase() && user.password === passwordInput
+            );
+
+            if (foundUser) {
+                localStorage.setItem('novaKidsActiveUser', foundUser.username);
+                window.location.href = "../landing.html";
+            } else {
+                errorAlert.textContent = "⚠️ Incorrect username or password. Try again!";
+                errorAlert.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
