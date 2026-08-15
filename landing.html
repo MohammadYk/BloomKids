@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BloomKids - My Savings Dashboard</title>
+    <title>BloomKids - Your Digital Savings Vault</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -20,6 +20,9 @@
             min-height: 100vh;
             padding: 20px;
             color: #2d3436;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         @keyframes gradientBG {
@@ -28,9 +31,170 @@
             100% { background-position: 0% 50%; }
         }
 
+        .view-section {
+            width: 100%;
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* --- AUTH CARDS (LOGIN & SIGNUP) --- */
+        .auth-container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            text-align: center;
+            border: 4px dashed #4ecdc4;
+            animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s ease;
+        }
+
+        .auth-container.signup-theme {
+            border-color: #ff6b6b;
+        }
+
+        .auth-container:hover {
+            transform: translateY(-5px);
+        }
+
+        @keyframes popUp {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .logo-area h1 {
+            color: #4ecdc4;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0px #ffe66d;
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        .signup-theme .logo-area h1 {
+            color: #ff6b6b;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .logo-area p {
+            color: #ff6b6b;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .signup-theme .logo-area p {
+            color: #4ecdc4;
+        }
+
+        .form-step {
+            animation: fadeIn 0.4s ease;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3436;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 3px solid #dfe6e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: #fff;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+        }
+
+        .signup-theme .form-group input:focus, 
+        .signup-theme .form-group select:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 8px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn-auth {
+            background-color: #ffe66d;
+            color: #2d3436;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #f1c40f;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 10px;
+        }
+
+        .btn-auth:hover {
+            background-color: #f1c40f;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 #d4ac0d;
+        }
+
+        .btn-auth:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #f1c40f;
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #636e72;
+        }
+
+        .footer-text a {
+            color: #4ecdc4;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .signup-theme .footer-text a {
+            color: #ff6b6b;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- DASHBOARD STYLES --- */
         .dashboard-container {
             max-width: 900px;
             margin: 0 auto;
+            width: 100%;
             animation: slideDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -69,11 +233,6 @@
             text-shadow: 1px 1px 0px #ffe66d;
             display: inline-block;
             animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
         }
 
         .user-welcome {
@@ -185,33 +344,6 @@
             margin-bottom: 15px;
             color: #0984e3;
             font-size: 1.3rem;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #dfe6e9;
-            border-radius: 10px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .form-group input:focus {
-            border-color: #0984e3;
-            box-shadow: 0 0 8px rgba(9, 132, 227, 0.3);
         }
 
         .btn-action {
@@ -423,68 +555,162 @@
 </head>
 <body>
 
-    <div class="dashboard-container">
-        <header>
-            <h1>🌸 BloomKids</h1>
-            <div>
-                <span class="user-welcome" id="display-username">Hi, Saver!</span>
-                <button class="btn-logout" onclick="logout()">Log Out</button>
-            </div>
-        </header>
-
-        <div class="balance-card" onclick="openCurrencyModal()" title="Click to view currencies and debts!">
-            <h2>My Savings Vault Balance</h2>
-            <div class="balance-amount" id="display-balance">0.00 USD</div>
-            <small>🌐 Click here for Currencies & People Owing You!</small>
-        </div>
-
-        <div class="grid-section">
-            <div class="card">
-                <h3>💰 Add Money</h3>
-                <div id="deposit-alert" class="alert-msg" style="display:none;"></div>
-                <form id="deposit-form">
-                    <div class="form-group">
-                        <label for="deposit-amount">Amount to Add:</label>
-                        <input type="number" id="deposit-amount" min="1" step="any" placeholder="e.g. 20" required>
-                    </div>
-                    <button type="submit" class="btn-action btn-deposit">Deposit to Savings Vault! 🌟</button>
-                </form>
+    <!-- 1. LOGIN VIEW -->
+    <div id="login-view" class="view-section">
+        <div class="auth-container">
+            <div class="logo-area">
+                <h1>🌸 BloomKids</h1>
+                <p>Welcome Back, Super Saver!</p>
             </div>
 
-            <div class="card">
-                <h3>💸 Send Money</h3>
-                <div id="transfer-alert" class="alert-msg" style="display:none;"></div>
-                <form id="transfer-form">
-                    <div class="form-group">
-                        <label for="recipient">Friend's Username:</label>
-                        <input type="text" id="recipient" placeholder="e.g. StarSaver99" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="transfer-amount">Amount:</label>
-                        <input type="number" id="transfer-amount" min="1" step="any" placeholder="e.g. 10" required>
-                    </div>
-                    <button type="submit" class="btn-action">Transfer Now! 🚀</button>
-                </form>
-            </div>
-        </div>
+            <div id="login-error-alert" class="alert-msg" style="color: #d63031; display: none;"></div>
 
-        <div class="grid-section" style="grid-template-columns: 1fr;">
-            <div class="card">
-                <h3>📜 Recent Activity</h3>
-                <ul class="transactions-list" id="transactions-list">
-                    <li><span>No transactions yet</span></li>
-                </ul>
-            </div>
-        </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Your Cool Username:</label>
+                    <input type="text" id="login-username" placeholder="e.g. SamsungGuru" required>
+                </div>
 
-        <div class="analytics-card">
-            <h3>📊 Savings Analytics (Last 30 Days)</h3>
-            <div style="position: relative; height:250px; width:100%;">
-                <canvas id="analyticsChart"></canvas>
+                <div class="form-group">
+                    <label for="login-password">Your Secret Password:</label>
+                    <input type="password" id="login-password" placeholder="Shhh... keep it secret!" required>
+                </div>
+
+                <button type="submit" class="btn-auth">Open My Savings Vault! 🚀</button>
+            </form>
+
+            <div class="footer-text">
+                Don't have a savings account yet? <a onclick="switchView('signup-view')">Sign up here</a>
             </div>
         </div>
     </div>
 
+    <!-- 2. SIGNUP VIEW -->
+    <div id="signup-view" class="view-section">
+        <div class="auth-container signup-theme">
+            <div class="logo-area">
+                <h1>🌸 BloomKids</h1>
+                <p id="signup-subtitle">Start Your Saving Adventure Today!</p>
+            </div>
+
+            <div id="signup-error-alert" class="alert-msg" style="color: #d63031; display: none;"></div>
+
+            <form id="signup-form">
+                <div id="step-1-fields" class="form-step">
+                    <div class="form-group">
+                        <label for="signup-username">Choose a Username:</label>
+                        <input type="text" id="signup-username" placeholder="e.g. SamsungGuru">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signup-parent-email">Parent's Email Address:</label>
+                        <input type="email" id="signup-parent-email" placeholder="parent@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signup-password">Create a Secret Password:</label>
+                        <input type="password" id="signup-password" placeholder="Shhh... keep it secret!">
+                    </div>
+                </div>
+
+                <div id="step-2-fields" class="form-step" style="display: none;">
+                    <div class="form-group">
+                        <label for="signup-fullname">What is your Full Name?</label>
+                        <input type="text" id="signup-fullname" placeholder="e.g. John Doe">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signup-age">How old are you?</label>
+                        <input type="number" id="signup-age" min="3" max="18" placeholder="e.g. 10">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signup-currency">Choose your favorite Currency:</label>
+                        <select id="signup-currency">
+                            <option value="USD">$ - US Dollar</option>
+                            <option value="EUR">€ - Euro</option>
+                            <option value="GBP">£ - British Pound</option>
+                            <option value="NGN">₦ - Nigerian Naira</option>
+                            <option value="CAD">$ - Canadian Dollar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" id="signup-submit-btn" class="btn-auth">Next Step! 🌟</button>
+            </form>
+
+            <div class="footer-text">
+                Already have a savings account? <a onclick="switchView('login-view')">Log in here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. DASHBOARD VIEW -->
+    <div id="dashboard-view" class="view-section">
+        <div class="dashboard-container">
+            <header>
+                <h1>🌸 BloomKids</h1>
+                <div>
+                    <span class="user-welcome" id="display-username">Hi, Saver!</span>
+                    <button class="btn-logout" onclick="logout()">Log Out</button>
+                </div>
+            </header>
+
+            <div class="balance-card" onclick="openCurrencyModal()" title="Click to view currencies and debts!">
+                <h2>My Savings Vault Balance</h2>
+                <div class="balance-amount" id="display-balance">0.00 USD</div>
+                <small>🌐 Click here for Currencies & People Owing You!</small>
+            </div>
+
+            <div class="grid-section">
+                <div class="card">
+                    <h3>💰 Add Money</h3>
+                    <div id="deposit-alert" class="alert-msg" style="display:none;"></div>
+                    <form id="deposit-form">
+                        <div class="form-group">
+                            <label for="deposit-amount">Amount to Add:</label>
+                            <input type="number" id="deposit-amount" min="1" step="any" placeholder="e.g. 20" required>
+                        </div>
+                        <button type="submit" class="btn-action btn-deposit">Deposit to Savings Vault! 🌟</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>💸 Send Money</h3>
+                    <div id="transfer-alert" class="alert-msg" style="display:none;"></div>
+                    <form id="transfer-form">
+                        <div class="form-group">
+                            <label for="recipient">Friend's Username:</label>
+                            <input type="text" id="recipient" placeholder="e.g. StarSaver99" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transfer-amount">Amount:</label>
+                            <input type="number" id="transfer-amount" min="1" step="any" placeholder="e.g. 10" required>
+                        </div>
+                        <button type="submit" class="btn-action">Transfer Now! 🚀</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="grid-section" style="grid-template-columns: 1fr;">
+                <div class="card">
+                    <h3>📜 Recent Activity</h3>
+                    <ul class="transactions-list" id="transactions-list">
+                        <li><span>No transactions yet</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="analytics-card">
+                <h3>📊 Savings Analytics (Last 30 Days)</h3>
+                <div style="position: relative; height:250px; width:100%;">
+                    <canvas id="analyticsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CURRENCY & DEBT MODAL -->
     <div id="currencyModal" class="modal">
         <div class="modal-content">
             <h3>💱 Currency & Debt Hub</h3>
@@ -523,35 +749,164 @@
     </div>
 
     <script>
-        const activeUsername = localStorage.getItem('novaKidsActiveUser');
-        if (!activeUsername) {
-            alert("⚠️ Please log in or sign up first!");
-            window.location.href = "LogIn/index.html";
-        }
-
+        // --- APP STATE & ROUTING ---
         let users = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
-        let currentUserIndex = users.findIndex(u => u.username === activeUsername);
-        
-        if (currentUserIndex === -1) {
-            alert("⚠️ Account not found. Please register again.");
-            localStorage.removeItem('novaKidsActiveUser');
-            window.location.href = "SignUp/index.html";
+        let activeUsername = localStorage.getItem('novaKidsActiveUser');
+        let currentUser = null;
+        let currentUserIndex = -1;
+        let signupStep = 1;
+        let analyticsChartInstance = null;
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+
+            if (viewId === 'dashboard-view') {
+                initDashboard();
+            } else if (viewId === 'signup-view') {
+                resetSignupForm();
+            }
         }
 
-        let currentUser = users[currentUserIndex];
+        // Initialize view based on active session
+        window.addEventListener('DOMContentLoaded', () => {
+            if (activeUsername) {
+                currentUserIndex = users.findIndex(u => u.username === activeUsername);
+                if (currentUserIndex !== -1) {
+                    switchView('dashboard-view');
+                    return;
+                }
+            }
+            switchView('login-view');
+        });
 
-        if (typeof currentUser.balance !== 'number') currentUser.balance = 0;
-        if (!currentUser.transactions) currentUser.transactions = [];
-        if (!currentUser.debts) currentUser.debts = [];
+        // --- LOGIN HANDLER ---
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const usernameInput = document.getElementById('login-username').value.trim();
+            const passwordInput = document.getElementById('login-password').value;
+            const errorAlert = document.getElementById('login-error-alert');
+            errorAlert.style.display = 'none';
 
-        document.getElementById('display-username').textContent = `Hi, ${currentUser.username}!`;
-        let currencySymbol = getCurrencySymbol(currentUser.currency || 'USD');
-        document.getElementById('display-balance').textContent = `${currentUser.balance.toFixed(2)} ${currentUser.currency || 'USD'}`;
+            users = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
+            const foundUser = users.find(user => 
+                user.username.toLowerCase() === usernameInput.toLowerCase() && user.password === passwordInput
+            );
 
-        renderTransactions();
-        renderDebts();
-        let analyticsChartInstance = null;
-        renderAnalyticsChart();
+            if (foundUser) {
+                localStorage.setItem('novaKidsActiveUser', foundUser.username);
+                activeUsername = foundUser.username;
+                currentUserIndex = users.findIndex(u => u.username === activeUsername);
+                switchView('dashboard-view');
+            } else {
+                errorAlert.textContent = "⚠️ Incorrect username or password. Try again!";
+                errorAlert.style.display = 'block';
+            }
+        });
+
+        // --- SIGNUP HANDLER ---
+        function resetSignupForm() {
+            signupStep = 1;
+            document.getElementById('step-1-fields').style.display = 'block';
+            document.getElementById('step-2-fields').style.display = 'none';
+            document.getElementById('signup-subtitle').textContent = "Start Your Saving Adventure Today!";
+            document.getElementById('signup-submit-btn').textContent = "Next Step! 🌟";
+            document.getElementById('signup-error-alert').style.display = 'none';
+            document.getElementById('signup-form').reset();
+        }
+
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const errorAlert = document.getElementById('signup-error-alert');
+            errorAlert.style.display = 'none';
+
+            if (signupStep === 1) {
+                const usernameInput = document.getElementById('signup-username').value.trim();
+                const parentEmail = document.getElementById('signup-parent-email').value.trim();
+                const password = document.getElementById('signup-password').value;
+
+                if (!usernameInput || !parentEmail || !password) {
+                    errorAlert.textContent = "⚠️ Please fill out all required fields!";
+                    errorAlert.style.display = 'block';
+                    return;
+                }
+
+                users = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
+                const userExists = users.some(user => user.username.toLowerCase() === usernameInput.toLowerCase());
+
+                if (userExists) {
+                    errorAlert.textContent = "⚠️ That username is already registered! Please pick another one.";
+                    errorAlert.style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('step-1-fields').style.display = 'none';
+                document.getElementById('step-2-fields').style.display = 'block';
+                document.getElementById('signup-subtitle').textContent = "Tell us a little bit about yourself!";
+                document.getElementById('signup-submit-btn').textContent = "Create My Savings Vault! 🚀";
+                signupStep = 2;
+
+            } else {
+                const username = document.getElementById('signup-username').value.trim();
+                const parentEmail = document.getElementById('signup-parent-email').value.trim();
+                const password = document.getElementById('signup-password').value;
+                const fullname = document.getElementById('signup-fullname').value.trim();
+                const age = document.getElementById('signup-age').value;
+                const currency = document.getElementById('signup-currency').value;
+
+                users.push({
+                    username: username,
+                    parentEmail: parentEmail,
+                    password: password,
+                    fullname: fullname,
+                    age: age,
+                    currency: currency,
+                    balance: 0,
+                    transactions: [],
+                    debts: []
+                });
+
+                localStorage.setItem('novaKidsUsers', JSON.stringify(users));
+                alert("🎉 Hooray! Your BloomKids Savings Vault has been created!");
+                switchView('login-view');
+            }
+        });
+
+        // --- DASHBOARD FUNCTIONS ---
+        function initDashboard() {
+            users = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
+            currentUserIndex = users.findIndex(u => u.username === activeUsername);
+
+            if (currentUserIndex === -1) {
+                alert("⚠️ Account not found. Please log in or register.");
+                logout();
+                return;
+            }
+
+            currentUser = users[currentUserIndex];
+            if (typeof currentUser.balance !== 'number') currentUser.balance = 0;
+            if (!currentUser.transactions) currentUser.transactions = [];
+            if (!currentUser.debts) currentUser.debts = [];
+
+            document.getElementById('display-username').textContent = `Hi, ${currentUser.username}!`;
+            refreshUI();
+        }
+
+        function refreshUI() {
+            let currencySymbol = getCurrencySymbol(currentUser.currency || 'USD');
+            document.getElementById('display-balance').textContent = `${currentUser.balance.toFixed(2)} ${currentUser.currency || 'USD'}`;
+            renderTransactions();
+            renderDebts();
+            renderAnalyticsChart();
+        }
+
+        function logout() {
+            localStorage.removeItem('novaKidsActiveUser');
+            activeUsername = null;
+            currentUser = null;
+            currentUserIndex = -1;
+            switchView('login-view');
+        }
 
         function openCurrencyModal() {
             let usdVal = currentUser.balance;
@@ -590,7 +945,7 @@
 
             saveUserData();
             document.getElementById('deposit-form').reset();
-            showAlert(alertBox, `🎉 Successfully added ${currencySymbol}${amount.toFixed(2)} to your savings vault!`, "green");
+            showAlert(alertBox, `🎉 Successfully added ${getCurrencySymbol(currentUser.currency)}${amount.toFixed(2)} to your savings vault!`, "green");
         });
 
         document.getElementById('transfer-form').addEventListener('submit', function(e) {
@@ -659,7 +1014,7 @@
 
                 currentUser.debts.splice(index, 1);
                 saveUserData();
-                alert(`🎉 ${settledDebt.name} paid you back ${currencySymbol}${settledDebt.amount.toFixed(2)}! Added to your savings vault.`);
+                alert(`🎉 ${settledDebt.name} paid you back ${getCurrencySymbol(currentUser.currency)}${settledDebt.amount.toFixed(2)}! Added to your savings vault.`);
             }
         }
 
@@ -683,14 +1038,6 @@
             users[currentUserIndex] = currentUser;
             localStorage.setItem('novaKidsUsers', JSON.stringify(users));
             refreshUI();
-        }
-
-        function refreshUI() {
-            currencySymbol = getCurrencySymbol(currentUser.currency || 'USD');
-            document.getElementById('display-balance').textContent = `${currentUser.balance.toFixed(2)} ${currentUser.currency || 'USD'}`;
-            renderTransactions();
-            renderDebts();
-            renderAnalyticsChart();
         }
 
         function showAlert(element, message, color) {
@@ -725,7 +1072,7 @@
                 }
 
                 li.innerHTML = `<span>${desc} <br><small style="color:#b2bec3">${tx.date}</small></span>
-                                <span class="${amountClass}">${sign}${currencySymbol}${tx.amount.toFixed(2)}</span>`;
+                                <span class="${amountClass}">${sign}${getCurrencySymbol(currentUser.currency)}${tx.amount.toFixed(2)}</span>`;
                 listEl.appendChild(li);
             });
         }
@@ -741,7 +1088,7 @@
 
             currentUser.debts.forEach(debt => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span><b>${debt.name}</b>: ${currencySymbol}${debt.amount.toFixed(2)}</span>
+                li.innerHTML = `<span><b>${debt.name}</b>: ${getCurrencySymbol(currentUser.currency)}${debt.amount.toFixed(2)}</span>
                                 <span class="debt-actions">
                                     <button class="btn-edit" onclick="editDebt(${debt.id})">Edit</button>
                                     <button onclick="deleteDebt(${debt.id})">Paid 💰</button>
@@ -801,11 +1148,6 @@
                 case 'NGN': return '₦';
                 default: return '$';
             }
-        }
-
-        function logout() {
-            localStorage.removeItem('novaKidsActiveUser');
-            window.location.href = "LogIn/index.html";
         }
     </script>
 </body>
