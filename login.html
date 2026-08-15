@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In to BloomKids! - Your Digital Savings Vault</title>
-    <link rel="shortcut icon" href="../assets/logo.png" type="image/x-icon">
+    <title>BloomKids - Log In</title>
     <style>
         * {
             box-sizing: border-box;
@@ -18,10 +17,11 @@
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             min-height: 100vh;
+            padding: 20px;
+            color: #2d3436;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
 
         @keyframes gradientBG {
@@ -30,7 +30,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        .login-container {
+        .auth-container {
             background: #ffffff;
             padding: 40px;
             border-radius: 25px;
@@ -43,7 +43,7 @@
             transition: transform 0.3s ease;
         }
 
-        .login-container:hover {
+        .auth-container:hover {
             transform: translateY(-5px);
         }
 
@@ -100,6 +100,7 @@
             font-size: 1rem;
             outline: none;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: #fff;
         }
 
         .form-group input:focus {
@@ -107,7 +108,7 @@
             box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
         }
 
-        .btn-login {
+        .btn-auth {
             background-color: #ffe66d;
             color: #2d3436;
             border: none;
@@ -122,30 +123,15 @@
             margin-top: 10px;
         }
 
-        .btn-login:hover {
+        .btn-auth:hover {
             background-color: #f1c40f;
             transform: translateY(-2px);
             box-shadow: 0 7px 0 #d4ac0d;
         }
 
-        .btn-login:active {
+        .btn-auth:active {
             transform: translateY(4px);
             box-shadow: 0 1px 0 #f1c40f;
-        }
-
-        .error-msg {
-            color: #d63031;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            font-weight: bold;
-            display: none;
-            animation: shake 0.4s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-8px); }
-            40%, 80% { transform: translateX(8px); }
         }
 
         .footer-text {
@@ -162,57 +148,75 @@
         }
 
         .footer-text a:hover {
-            color: #ff6b6b;
             text-decoration: underline;
+        }
+
+        .alert-msg {
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #d63031;
+            display: none;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <div class="login-container">
+    <div class="auth-container">
         <div class="logo-area">
             <h1>🌸 BloomKids</h1>
             <p>Welcome Back, Super Saver!</p>
         </div>
 
-        <div id="error-alert" class="error-msg"></div>
+        <div id="login-error-alert" class="alert-msg"></div>
 
         <form id="login-form">
             <div class="form-group">
-                <label for="username">Your Cool Username:</label>
-                <input type="text" id="username" name="username" placeholder="e.g. SamsungGuru" required>
+                <label for="login-username">Your Cool Username:</label>
+                <input type="text" id="login-username" placeholder="e.g. SamsungGuru" required>
             </div>
 
             <div class="form-group">
-                <label for="password">Your Secret Password:</label>
-                <input type="password" id="password" name="password" placeholder="Shhh... keep it secret!" required>
+                <label for="login-password">Your Secret Password:</label>
+                <input type="password" id="login-password" placeholder="Shhh... keep it secret!" required>
             </div>
 
-            <button type="submit" class="btn-login">Open My Savings Vault! 🚀</button>
+            <button type="submit" class="btn-auth">Open My Savings Vault! 🚀</button>
         </form>
 
         <div class="footer-text">
-            Don't have a savings account yet? <a href="../SignUp/index.html">Sign up here</a>
+            Don't have a savings account yet? <a href="signup.html">Sign up here</a>
         </div>
     </div>
 
     <script>
+        // Check if user is already logged in
+        const activeUser = localStorage.getItem('novaKidsActiveUser');
+        if (activeUser) {
+            window.location.href = 'index.html';
+        }
+
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            const usernameInput = document.getElementById('username').value.trim();
-            const passwordInput = document.getElementById('password').value;
-            const errorAlert = document.getElementById('error-alert');
+            const usernameInput = document.getElementById('login-username').value.trim();
+            const passwordInput = document.getElementById('login-password').value;
+            const errorAlert = document.getElementById('login-error-alert');
             errorAlert.style.display = 'none';
 
-            let registeredUsers = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
-            
-            const foundUser = registeredUsers.find(user => 
+            const users = JSON.parse(localStorage.getItem('novaKidsUsers')) || [];
+            const foundUser = users.find(user => 
                 user.username.toLowerCase() === usernameInput.toLowerCase() && user.password === passwordInput
             );
 
             if (foundUser) {
                 localStorage.setItem('novaKidsActiveUser', foundUser.username);
-                window.location.href = "../landing.html";
+                window.location.href = 'index.html';
             } else {
                 errorAlert.textContent = "⚠️ Incorrect username or password. Try again!";
                 errorAlert.style.display = 'block';
